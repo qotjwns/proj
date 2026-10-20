@@ -1,0 +1,1736 @@
+{
+  "passed": true,
+  "checks": {
+    "sample_coverage": true,
+    "all_sample_checks": true,
+    "baseline_configuration_matches": true
+  },
+  "sample_count": 16,
+  "selection": {
+    "groups": [
+      "cat_001",
+      "bus_002"
+    ],
+    "N": [
+      2,
+      4,
+      6,
+      8
+    ],
+    "answers": [
+      "Yes",
+      "No"
+    ]
+  },
+  "scope": "CPU Processor inputs only; no model weights, forward pass, or generation.",
+  "model": {
+    "model_id": "Qwen/Qwen2.5-VL-3B-Instruct",
+    "save_dir": "data/models/qwen2.5-vl-3b-instruct",
+    "revision": "66285546d2b821cf421d4f5eb2576359d3770cd3"
+  },
+  "dataset_sha256": "5f0159d1ab07c6d1458c1e5b0ee9ea05c7b9d12dd58db5a338d97ed127e2d313",
+  "run_e1_sha256": "ac11f981f0954c96cc70ec0191cd52526e658e298571b994a6b9fba1088f68a3",
+  "torch_version": "2.14.1",
+  "transformers_version": "5.20.1",
+  "context_limit": 128000,
+  "minimal_pairs": [
+    {
+      "group_id": "cat_001",
+      "num_images": 2,
+      "changed_image_indices": [
+        1
+      ],
+      "passed": true
+    },
+    {
+      "group_id": "cat_001",
+      "num_images": 4,
+      "changed_image_indices": [
+        1
+      ],
+      "passed": true
+    },
+    {
+      "group_id": "cat_001",
+      "num_images": 6,
+      "changed_image_indices": [
+        1
+      ],
+      "passed": true
+    },
+    {
+      "group_id": "cat_001",
+      "num_images": 8,
+      "changed_image_indices": [
+        1
+      ],
+      "passed": true
+    },
+    {
+      "group_id": "bus_002",
+      "num_images": 2,
+      "changed_image_indices": [
+        1
+      ],
+      "passed": true
+    },
+    {
+      "group_id": "bus_002",
+      "num_images": 4,
+      "changed_image_indices": [
+        1
+      ],
+      "passed": true
+    },
+    {
+      "group_id": "bus_002",
+      "num_images": 6,
+      "changed_image_indices": [
+        1
+      ],
+      "passed": true
+    },
+    {
+      "group_id": "bus_002",
+      "num_images": 8,
+      "changed_image_indices": [
+        1
+      ],
+      "passed": true
+    }
+  ],
+  "samples": [
+    {
+      "sample_id": "cat_001_n2_yes",
+      "group_id": "cat_001",
+      "num_images": 2,
+      "answer": "Yes",
+      "images": [
+        "data/coco/val2017/000000186296.jpg",
+        "data/coco/val2017/000000574810.jpg"
+      ],
+      "question": "Is there at least one cat in each of the 2 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one cat in each of the 2 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 555,
+      "image_token_count": 512,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        2048,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272
+      ],
+      "vision_end_positions": [
+        271,
+        529
+      ],
+      "image_tensor_sha256": [
+        "b0e015e18a4e5989778c69d0be2cee723e01caad1365ca7b224d3949379d3e19",
+        "da82cabfa6cfb7277836ee2b00125b45e8a6b8e326de2f4651538797db055ced"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "cat_001_n2_no_pos1",
+      "group_id": "cat_001",
+      "num_images": 2,
+      "answer": "No",
+      "images": [
+        "data/coco/val2017/000000186296.jpg",
+        "data/coco/val2017/000000322574.jpg"
+      ],
+      "question": "Is there at least one cat in each of the 2 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one cat in each of the 2 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 555,
+      "image_token_count": 512,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        2048,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272
+      ],
+      "vision_end_positions": [
+        271,
+        529
+      ],
+      "image_tensor_sha256": [
+        "b0e015e18a4e5989778c69d0be2cee723e01caad1365ca7b224d3949379d3e19",
+        "855d13ac293bd818bc83060ccaa8dcc6078b0fd329c8e6b89f8969cc89239b43"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "cat_001_n4_yes",
+      "group_id": "cat_001",
+      "num_images": 4,
+      "answer": "Yes",
+      "images": [
+        "data/coco/val2017/000000186296.jpg",
+        "data/coco/val2017/000000574810.jpg",
+        "data/coco/val2017/000000284623.jpg",
+        "data/coco/val2017/000000117908.jpg"
+      ],
+      "question": "Is there at least one cat in each of the 4 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one cat in each of the 4 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 1071,
+      "image_token_count": 1024,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        4096,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256,
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272,
+        530,
+        788
+      ],
+      "vision_end_positions": [
+        271,
+        529,
+        787,
+        1045
+      ],
+      "image_tensor_sha256": [
+        "b0e015e18a4e5989778c69d0be2cee723e01caad1365ca7b224d3949379d3e19",
+        "da82cabfa6cfb7277836ee2b00125b45e8a6b8e326de2f4651538797db055ced",
+        "27af295274b9ee9066d78b5583a0116efed00b1806178b156d06e51ad16a69bf",
+        "30b379d95e71c202f69a2f3aa70df017417231946de53fcdedfb1d2c577623f3"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "cat_001_n4_no_pos1",
+      "group_id": "cat_001",
+      "num_images": 4,
+      "answer": "No",
+      "images": [
+        "data/coco/val2017/000000186296.jpg",
+        "data/coco/val2017/000000322574.jpg",
+        "data/coco/val2017/000000284623.jpg",
+        "data/coco/val2017/000000117908.jpg"
+      ],
+      "question": "Is there at least one cat in each of the 4 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one cat in each of the 4 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 1071,
+      "image_token_count": 1024,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        4096,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256,
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272,
+        530,
+        788
+      ],
+      "vision_end_positions": [
+        271,
+        529,
+        787,
+        1045
+      ],
+      "image_tensor_sha256": [
+        "b0e015e18a4e5989778c69d0be2cee723e01caad1365ca7b224d3949379d3e19",
+        "855d13ac293bd818bc83060ccaa8dcc6078b0fd329c8e6b89f8969cc89239b43",
+        "27af295274b9ee9066d78b5583a0116efed00b1806178b156d06e51ad16a69bf",
+        "30b379d95e71c202f69a2f3aa70df017417231946de53fcdedfb1d2c577623f3"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "cat_001_n6_yes",
+      "group_id": "cat_001",
+      "num_images": 6,
+      "answer": "Yes",
+      "images": [
+        "data/coco/val2017/000000186296.jpg",
+        "data/coco/val2017/000000574810.jpg",
+        "data/coco/val2017/000000284623.jpg",
+        "data/coco/val2017/000000117908.jpg",
+        "data/coco/val2017/000000425390.jpg",
+        "data/coco/val2017/000000222235.jpg"
+      ],
+      "question": "Is there at least one cat in each of the 6 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one cat in each of the 6 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 1587,
+      "image_token_count": 1536,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        6144,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256,
+        256,
+        256,
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272,
+        530,
+        788,
+        1046,
+        1304
+      ],
+      "vision_end_positions": [
+        271,
+        529,
+        787,
+        1045,
+        1303,
+        1561
+      ],
+      "image_tensor_sha256": [
+        "b0e015e18a4e5989778c69d0be2cee723e01caad1365ca7b224d3949379d3e19",
+        "da82cabfa6cfb7277836ee2b00125b45e8a6b8e326de2f4651538797db055ced",
+        "27af295274b9ee9066d78b5583a0116efed00b1806178b156d06e51ad16a69bf",
+        "30b379d95e71c202f69a2f3aa70df017417231946de53fcdedfb1d2c577623f3",
+        "b82b9cdc552733a70318c473cebf9a8ae26c3c3cd6a311a8c07a33928417e35b",
+        "4089e5b82e11c7c353c2a85ee912437cb2c75b475393dd440069680e94b4d4bd"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "cat_001_n6_no_pos1",
+      "group_id": "cat_001",
+      "num_images": 6,
+      "answer": "No",
+      "images": [
+        "data/coco/val2017/000000186296.jpg",
+        "data/coco/val2017/000000322574.jpg",
+        "data/coco/val2017/000000284623.jpg",
+        "data/coco/val2017/000000117908.jpg",
+        "data/coco/val2017/000000425390.jpg",
+        "data/coco/val2017/000000222235.jpg"
+      ],
+      "question": "Is there at least one cat in each of the 6 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one cat in each of the 6 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 1587,
+      "image_token_count": 1536,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        6144,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256,
+        256,
+        256,
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272,
+        530,
+        788,
+        1046,
+        1304
+      ],
+      "vision_end_positions": [
+        271,
+        529,
+        787,
+        1045,
+        1303,
+        1561
+      ],
+      "image_tensor_sha256": [
+        "b0e015e18a4e5989778c69d0be2cee723e01caad1365ca7b224d3949379d3e19",
+        "855d13ac293bd818bc83060ccaa8dcc6078b0fd329c8e6b89f8969cc89239b43",
+        "27af295274b9ee9066d78b5583a0116efed00b1806178b156d06e51ad16a69bf",
+        "30b379d95e71c202f69a2f3aa70df017417231946de53fcdedfb1d2c577623f3",
+        "b82b9cdc552733a70318c473cebf9a8ae26c3c3cd6a311a8c07a33928417e35b",
+        "4089e5b82e11c7c353c2a85ee912437cb2c75b475393dd440069680e94b4d4bd"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "cat_001_n8_yes",
+      "group_id": "cat_001",
+      "num_images": 8,
+      "answer": "Yes",
+      "images": [
+        "data/coco/val2017/000000186296.jpg",
+        "data/coco/val2017/000000574810.jpg",
+        "data/coco/val2017/000000284623.jpg",
+        "data/coco/val2017/000000117908.jpg",
+        "data/coco/val2017/000000425390.jpg",
+        "data/coco/val2017/000000222235.jpg",
+        "data/coco/val2017/000000353970.jpg",
+        "data/coco/val2017/000000416256.jpg"
+      ],
+      "question": "Is there at least one cat in each of the 8 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one cat in each of the 8 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 2103,
+      "image_token_count": 2048,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        8192,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272,
+        530,
+        788,
+        1046,
+        1304,
+        1562,
+        1820
+      ],
+      "vision_end_positions": [
+        271,
+        529,
+        787,
+        1045,
+        1303,
+        1561,
+        1819,
+        2077
+      ],
+      "image_tensor_sha256": [
+        "b0e015e18a4e5989778c69d0be2cee723e01caad1365ca7b224d3949379d3e19",
+        "da82cabfa6cfb7277836ee2b00125b45e8a6b8e326de2f4651538797db055ced",
+        "27af295274b9ee9066d78b5583a0116efed00b1806178b156d06e51ad16a69bf",
+        "30b379d95e71c202f69a2f3aa70df017417231946de53fcdedfb1d2c577623f3",
+        "b82b9cdc552733a70318c473cebf9a8ae26c3c3cd6a311a8c07a33928417e35b",
+        "4089e5b82e11c7c353c2a85ee912437cb2c75b475393dd440069680e94b4d4bd",
+        "59f7ba36eccc0decbb3e39e398d7aa5ca2db966c6ca8b4969c2a7ad8d72af922",
+        "29b9f98c9f5882663fcce0db6b5c88ce9a125c2851f0faafc0271c5b7fdccb59"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "cat_001_n8_no_pos1",
+      "group_id": "cat_001",
+      "num_images": 8,
+      "answer": "No",
+      "images": [
+        "data/coco/val2017/000000186296.jpg",
+        "data/coco/val2017/000000322574.jpg",
+        "data/coco/val2017/000000284623.jpg",
+        "data/coco/val2017/000000117908.jpg",
+        "data/coco/val2017/000000425390.jpg",
+        "data/coco/val2017/000000222235.jpg",
+        "data/coco/val2017/000000353970.jpg",
+        "data/coco/val2017/000000416256.jpg"
+      ],
+      "question": "Is there at least one cat in each of the 8 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one cat in each of the 8 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 2103,
+      "image_token_count": 2048,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        8192,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272,
+        530,
+        788,
+        1046,
+        1304,
+        1562,
+        1820
+      ],
+      "vision_end_positions": [
+        271,
+        529,
+        787,
+        1045,
+        1303,
+        1561,
+        1819,
+        2077
+      ],
+      "image_tensor_sha256": [
+        "b0e015e18a4e5989778c69d0be2cee723e01caad1365ca7b224d3949379d3e19",
+        "855d13ac293bd818bc83060ccaa8dcc6078b0fd329c8e6b89f8969cc89239b43",
+        "27af295274b9ee9066d78b5583a0116efed00b1806178b156d06e51ad16a69bf",
+        "30b379d95e71c202f69a2f3aa70df017417231946de53fcdedfb1d2c577623f3",
+        "b82b9cdc552733a70318c473cebf9a8ae26c3c3cd6a311a8c07a33928417e35b",
+        "4089e5b82e11c7c353c2a85ee912437cb2c75b475393dd440069680e94b4d4bd",
+        "59f7ba36eccc0decbb3e39e398d7aa5ca2db966c6ca8b4969c2a7ad8d72af922",
+        "29b9f98c9f5882663fcce0db6b5c88ce9a125c2851f0faafc0271c5b7fdccb59"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "bus_002_n2_yes",
+      "group_id": "bus_002",
+      "num_images": 2,
+      "answer": "Yes",
+      "images": [
+        "data/coco/val2017/000000507797.jpg",
+        "data/coco/val2017/000000359937.jpg"
+      ],
+      "question": "Is there at least one bus in each of the 2 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one bus in each of the 2 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 555,
+      "image_token_count": 512,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        2048,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272
+      ],
+      "vision_end_positions": [
+        271,
+        529
+      ],
+      "image_tensor_sha256": [
+        "ac64af40703fe1e2f64673d693bf52622535ae8819f74e6078312f55419dba1d",
+        "989ce67b03a9032d3bcd7fc65798573abb7591f7bff8d6e9909d46a19e54b8f0"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "bus_002_n2_no_pos1",
+      "group_id": "bus_002",
+      "num_images": 2,
+      "answer": "No",
+      "images": [
+        "data/coco/val2017/000000507797.jpg",
+        "data/coco/val2017/000000128748.jpg"
+      ],
+      "question": "Is there at least one bus in each of the 2 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one bus in each of the 2 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 555,
+      "image_token_count": 512,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        2048,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272
+      ],
+      "vision_end_positions": [
+        271,
+        529
+      ],
+      "image_tensor_sha256": [
+        "ac64af40703fe1e2f64673d693bf52622535ae8819f74e6078312f55419dba1d",
+        "d23c6c8e31dc45f4cfee03f8c414cc6ff1ee61355185ebdf3750465a0a945c6f"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "bus_002_n4_yes",
+      "group_id": "bus_002",
+      "num_images": 4,
+      "answer": "Yes",
+      "images": [
+        "data/coco/val2017/000000507797.jpg",
+        "data/coco/val2017/000000359937.jpg",
+        "data/coco/val2017/000000202339.jpg",
+        "data/coco/val2017/000000052007.jpg"
+      ],
+      "question": "Is there at least one bus in each of the 4 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one bus in each of the 4 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 1071,
+      "image_token_count": 1024,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        4096,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256,
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272,
+        530,
+        788
+      ],
+      "vision_end_positions": [
+        271,
+        529,
+        787,
+        1045
+      ],
+      "image_tensor_sha256": [
+        "ac64af40703fe1e2f64673d693bf52622535ae8819f74e6078312f55419dba1d",
+        "989ce67b03a9032d3bcd7fc65798573abb7591f7bff8d6e9909d46a19e54b8f0",
+        "0b5efe1222c482d81fb6a71f9ab4f5b7aedd7087a7f9c8c00db9eabf62f1cadb",
+        "4288e7db5a00d6ea0c1e079e904a40b57ee9e90e69ddae477d67f3bedc41a9ca"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "bus_002_n4_no_pos1",
+      "group_id": "bus_002",
+      "num_images": 4,
+      "answer": "No",
+      "images": [
+        "data/coco/val2017/000000507797.jpg",
+        "data/coco/val2017/000000128748.jpg",
+        "data/coco/val2017/000000202339.jpg",
+        "data/coco/val2017/000000052007.jpg"
+      ],
+      "question": "Is there at least one bus in each of the 4 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one bus in each of the 4 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 1071,
+      "image_token_count": 1024,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        4096,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256,
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272,
+        530,
+        788
+      ],
+      "vision_end_positions": [
+        271,
+        529,
+        787,
+        1045
+      ],
+      "image_tensor_sha256": [
+        "ac64af40703fe1e2f64673d693bf52622535ae8819f74e6078312f55419dba1d",
+        "d23c6c8e31dc45f4cfee03f8c414cc6ff1ee61355185ebdf3750465a0a945c6f",
+        "0b5efe1222c482d81fb6a71f9ab4f5b7aedd7087a7f9c8c00db9eabf62f1cadb",
+        "4288e7db5a00d6ea0c1e079e904a40b57ee9e90e69ddae477d67f3bedc41a9ca"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "bus_002_n6_yes",
+      "group_id": "bus_002",
+      "num_images": 6,
+      "answer": "Yes",
+      "images": [
+        "data/coco/val2017/000000507797.jpg",
+        "data/coco/val2017/000000359937.jpg",
+        "data/coco/val2017/000000202339.jpg",
+        "data/coco/val2017/000000052007.jpg",
+        "data/coco/val2017/000000443498.jpg",
+        "data/coco/val2017/000000179265.jpg"
+      ],
+      "question": "Is there at least one bus in each of the 6 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one bus in each of the 6 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 1587,
+      "image_token_count": 1536,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        6144,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256,
+        256,
+        256,
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272,
+        530,
+        788,
+        1046,
+        1304
+      ],
+      "vision_end_positions": [
+        271,
+        529,
+        787,
+        1045,
+        1303,
+        1561
+      ],
+      "image_tensor_sha256": [
+        "ac64af40703fe1e2f64673d693bf52622535ae8819f74e6078312f55419dba1d",
+        "989ce67b03a9032d3bcd7fc65798573abb7591f7bff8d6e9909d46a19e54b8f0",
+        "0b5efe1222c482d81fb6a71f9ab4f5b7aedd7087a7f9c8c00db9eabf62f1cadb",
+        "4288e7db5a00d6ea0c1e079e904a40b57ee9e90e69ddae477d67f3bedc41a9ca",
+        "b15fbbbaa79e1c995063579ac0001c8e915c867431fe86e17b2e6c99797f4291",
+        "f958847d799eb1deb7e5fdc16d8dfed4cacad0a4e6cb3d4f0cf49b7b8a70e34b"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "bus_002_n6_no_pos1",
+      "group_id": "bus_002",
+      "num_images": 6,
+      "answer": "No",
+      "images": [
+        "data/coco/val2017/000000507797.jpg",
+        "data/coco/val2017/000000128748.jpg",
+        "data/coco/val2017/000000202339.jpg",
+        "data/coco/val2017/000000052007.jpg",
+        "data/coco/val2017/000000443498.jpg",
+        "data/coco/val2017/000000179265.jpg"
+      ],
+      "question": "Is there at least one bus in each of the 6 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one bus in each of the 6 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 1587,
+      "image_token_count": 1536,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        6144,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256,
+        256,
+        256,
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272,
+        530,
+        788,
+        1046,
+        1304
+      ],
+      "vision_end_positions": [
+        271,
+        529,
+        787,
+        1045,
+        1303,
+        1561
+      ],
+      "image_tensor_sha256": [
+        "ac64af40703fe1e2f64673d693bf52622535ae8819f74e6078312f55419dba1d",
+        "d23c6c8e31dc45f4cfee03f8c414cc6ff1ee61355185ebdf3750465a0a945c6f",
+        "0b5efe1222c482d81fb6a71f9ab4f5b7aedd7087a7f9c8c00db9eabf62f1cadb",
+        "4288e7db5a00d6ea0c1e079e904a40b57ee9e90e69ddae477d67f3bedc41a9ca",
+        "b15fbbbaa79e1c995063579ac0001c8e915c867431fe86e17b2e6c99797f4291",
+        "f958847d799eb1deb7e5fdc16d8dfed4cacad0a4e6cb3d4f0cf49b7b8a70e34b"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "bus_002_n8_yes",
+      "group_id": "bus_002",
+      "num_images": 8,
+      "answer": "Yes",
+      "images": [
+        "data/coco/val2017/000000507797.jpg",
+        "data/coco/val2017/000000359937.jpg",
+        "data/coco/val2017/000000202339.jpg",
+        "data/coco/val2017/000000052007.jpg",
+        "data/coco/val2017/000000443498.jpg",
+        "data/coco/val2017/000000179265.jpg",
+        "data/coco/val2017/000000176037.jpg",
+        "data/coco/val2017/000000177893.jpg"
+      ],
+      "question": "Is there at least one bus in each of the 8 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one bus in each of the 8 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 2103,
+      "image_token_count": 2048,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        8192,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272,
+        530,
+        788,
+        1046,
+        1304,
+        1562,
+        1820
+      ],
+      "vision_end_positions": [
+        271,
+        529,
+        787,
+        1045,
+        1303,
+        1561,
+        1819,
+        2077
+      ],
+      "image_tensor_sha256": [
+        "ac64af40703fe1e2f64673d693bf52622535ae8819f74e6078312f55419dba1d",
+        "989ce67b03a9032d3bcd7fc65798573abb7591f7bff8d6e9909d46a19e54b8f0",
+        "0b5efe1222c482d81fb6a71f9ab4f5b7aedd7087a7f9c8c00db9eabf62f1cadb",
+        "4288e7db5a00d6ea0c1e079e904a40b57ee9e90e69ddae477d67f3bedc41a9ca",
+        "b15fbbbaa79e1c995063579ac0001c8e915c867431fe86e17b2e6c99797f4291",
+        "f958847d799eb1deb7e5fdc16d8dfed4cacad0a4e6cb3d4f0cf49b7b8a70e34b",
+        "8e4c36c9441d2e30fff02bd7ccf617fa22aa51e4bc69215a6e7d637b69b3ddc4",
+        "65a1016f919d09b2aca97e2032bdf7bc80497af2680e75bd0123c1ddd96db3d0"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    },
+    {
+      "sample_id": "bus_002_n8_no_pos1",
+      "group_id": "bus_002",
+      "num_images": 8,
+      "answer": "No",
+      "images": [
+        "data/coco/val2017/000000507797.jpg",
+        "data/coco/val2017/000000128748.jpg",
+        "data/coco/val2017/000000202339.jpg",
+        "data/coco/val2017/000000052007.jpg",
+        "data/coco/val2017/000000443498.jpg",
+        "data/coco/val2017/000000179265.jpg",
+        "data/coco/val2017/000000176037.jpg",
+        "data/coco/val2017/000000177893.jpg"
+      ],
+      "question": "Is there at least one bus in each of the 8 images? Answer only Yes or No.",
+      "rendered_chat_before_image_expansion": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>Is there at least one bus in each of the 8 images? Answer only Yes or No.<|im_end|>\n<|im_start|>assistant\n",
+      "input_token_count": 2103,
+      "image_token_count": 2048,
+      "image_grid_thw": [
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ],
+        [
+          1,
+          32,
+          32
+        ]
+      ],
+      "pixel_values_shape": [
+        8192,
+        1176
+      ],
+      "image_token_counts": [
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256,
+        256
+      ],
+      "vision_start_positions": [
+        14,
+        272,
+        530,
+        788,
+        1046,
+        1304,
+        1562,
+        1820
+      ],
+      "vision_end_positions": [
+        271,
+        529,
+        787,
+        1045,
+        1303,
+        1561,
+        1819,
+        2077
+      ],
+      "image_tensor_sha256": [
+        "ac64af40703fe1e2f64673d693bf52622535ae8819f74e6078312f55419dba1d",
+        "d23c6c8e31dc45f4cfee03f8c414cc6ff1ee61355185ebdf3750465a0a945c6f",
+        "0b5efe1222c482d81fb6a71f9ab4f5b7aedd7087a7f9c8c00db9eabf62f1cadb",
+        "4288e7db5a00d6ea0c1e079e904a40b57ee9e90e69ddae477d67f3bedc41a9ca",
+        "b15fbbbaa79e1c995063579ac0001c8e915c867431fe86e17b2e6c99797f4291",
+        "f958847d799eb1deb7e5fdc16d8dfed4cacad0a4e6cb3d4f0cf49b7b8a70e34b",
+        "8e4c36c9441d2e30fff02bd7ccf617fa22aa51e4bc69215a6e7d637b69b3ddc4",
+        "65a1016f919d09b2aca97e2032bdf7bc80497af2680e75bd0123c1ddd96db3d0"
+      ],
+      "single_image_tensor_matches": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "checks": {
+        "declared_image_count": true,
+        "image_files_exist": true,
+        "distinct_images": true,
+        "grid_count_and_shape": true,
+        "patch_count": true,
+        "image_content_and_order": true,
+        "image_blocks_and_delimiters": true,
+        "image_token_count": true,
+        "no_truncation_or_extra_text": true,
+        "attention_mask": true,
+        "modality_token_types": true,
+        "finite_pixels": true,
+        "finite_pixels_after_fp16_cast": true,
+        "within_context_limit": true,
+        "question_N": true,
+        "saved_input_matches": true
+      },
+      "saved_result_available": true
+    }
+  ]
+}
