@@ -8,7 +8,7 @@ import zlib
 
 
 CHUNK_SIZE = 1024 * 1024
-DATA_DIR = Path(__file__).resolve().parent
+DATA_DIR = Path(__file__).resolve().parent / "data"
 DATASETS = {
     "images": {
         "url": "http://images.cocodataset.org/zips/val2017.zip",
@@ -128,4 +128,5 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    print(DATA_DIR)
+    # sys.exit(main())
