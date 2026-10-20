@@ -1,7 +1,6 @@
-# .venv/bin/python src/inference/run_e1.py configs/model.json
+# .venv/bin/python src/inference/run_e1.py qwen2.5-vl-3b-instruct
 # E1 전체 그룹을 configs/e1.json에서 선택한 템플릿으로 추론해 저장합니다.
 # 기존 결과는 유지하고, 아직 저장되지 않은 샘플만 추론합니다.
-import argparse
 import hashlib
 import json
 import math
@@ -9,7 +8,9 @@ from pathlib import Path
 from PIL import Image, ImageOps
 import torch
 import transformers
-from transformers import AutoProcessor, GenerationConfig, Qwen2_5_VLForConditionalGeneration
+from transformers import AutoModelForImageTextToText, AutoProcessor, GenerationConfig
+
+from model_config import get_log_dir, parse_model_config
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_PATH = PROJECT_ROOT / "data/eval_e1.json"
@@ -113,11 +114,8 @@ def predict(model, processor, inputs, generation_config, yes_id, no_id):
     }
 
 def main():
-    parser = argparse.ArgumentParser(description="E1 전체 그룹을 템플릿별로 추론합니다.")
-    parser.add_argument("config", type=Path, help="모델 설정 JSON 경로")
-    args = parser.parse_args()
-    config = json.loads(args.config.expanduser().read_text(encoding="utf-8"))
-    model_path = (PROJECT_ROOT / Path(config["save_dir"]).expanduser()).resolve()
+    model_name, config, model_path = parse_model_config("E1 전체 그룹을 템플릿별로 추론합니다.")
+    print(f"모델: {model_name} ({config['model_id']})", flush=True)
     data_bytes = DATA_PATH.read_bytes()
     samples = json.loads(data_bytes)
     prompt_bytes = PROMPT_CONFIG_PATH.read_bytes()
@@ -125,7 +123,8 @@ def main():
     evaluations = build_evaluations(samples, prompt_config)
     group_count = len({sample["group_id"] for sample in samples})
     total_trials = sum(len(trials) for trials in evaluations.values())
-    log_dir = PROJECT_ROOT / "logs"
+    log_dir = get_log_dir(model_name, config)
+    print(f"결과 경로: {log_dir}", flush=True)
     log_dir.mkdir(parents=True, exist_ok=True)
     meta_path = log_dir / "baseline_e1_meta.json"
     previous_metadata = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else None
@@ -177,7 +176,7 @@ def main():
     )
     yes_id, = processor.tokenizer.encode("Yes", add_special_tokens=False)
     no_id, = processor.tokenizer.encode("No", add_special_tokens=False)
-    model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+    model = AutoModelForImageTextToText.from_pretrained(
         model_path, local_files_only=True, dtype=dtype, attn_implementation="sdpa"
     ).to(device).eval()
     generation_config = GenerationConfig(

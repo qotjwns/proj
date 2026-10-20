@@ -3,16 +3,19 @@
 프로젝트 루트에서 실행합니다.
 
 ```bash
-.venv/bin/python src/visualization/plot_e1.py
+.venv/bin/python src/visualization/plot_e1.py qwen2.5-vl-3b-instruct
 ```
 
 `plot_e1.py` 상단의 `INCLUDE_FP32 = True`가 기본값입니다.
 FP16 결과에 없는 샘플만 FP32 재추론 결과로 보완합니다.
 그림에 혼합 정밀도임을 표시하고 각 정밀도로 계산된 샘플 수를 기록합니다.
 `False`로 바꾸면 FP16 결과만 사용합니다.
-추가 명령행 인자는 없습니다.
+`configs/model.json`에 등록된 모델 이름을 필수 인자로 받습니다.
+`--list-models`로 선택 가능한 모델을 확인할 수 있습니다.
+선택한 모델의 `logs/<모델 이름>/`에서 결과를 읽으며,
+해당 디렉토리가 없고 기존 `logs/`의 모델 설정이 일치하면 기존 로그를 사용합니다.
 
-출력은 `src/visualization/outputs/` 아래에 PNG, PDF, 지표 JSON으로 저장합니다.
+출력은 `src/visualization/outputs/<모델 이름>/` 아래에 PNG, PDF, 지표 JSON으로 저장합니다.
 기본 파일 이름은 `e1_main_fp16_fp32`, FP16만 사용할 때는 `e1_main_fp16`입니다.
 
 | 패널 | 계산 |

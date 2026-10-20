@@ -1,15 +1,19 @@
-# .venv/bin/python src/visualization/plot_e1.py
+# .venv/bin/python src/visualization/plot_e1.py qwen2.5-vl-3b-instruct
 # E1 main 결과에서 정확도, 오류율, 반례 민감도와 logit 분포를 6개 패널로 그립니다.
 import hashlib
 import json
 import math
 from pathlib import Path
+import sys
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "inference"))
+from model_config import get_log_dir, parse_model_config
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 INCLUDE_FP32 = True
@@ -27,18 +31,21 @@ def read_jsonl(path):
     return rows, hashlib.sha256(content).hexdigest()
 
 
-def load_results():
-    metadata = json.loads((PROJECT_ROOT / "logs/baseline_e1_meta.json").read_text())
+def load_results(log_dir, config):
+    metadata = json.loads((log_dir / "baseline_e1_meta.json").read_text())
+    if metadata["model"] != config:
+        print("선택한 모델과 저장된 실행 설정이 달라 그래프를 생성하지 않았습니다.")
+        return None
     data_bytes = (PROJECT_ROOT / metadata["dataset"]).read_bytes()
     if hashlib.sha256(data_bytes).hexdigest() != metadata["dataset_sha256"]:
         print("평가 데이터가 원본 추론 때와 달라 그래프를 생성하지 않았습니다.")
         return None
     expected = {sample["sample_id"]: sample for sample in json.loads(data_bytes)}
-    paths = [(PROJECT_ROOT / "logs/baseline_e1_main.jsonl", metadata["dtype"])]
+    paths = [(log_dir / "baseline_e1_main.jsonl", metadata["dtype"])]
     if INCLUDE_FP32:
-        retry_path = PROJECT_ROOT / "logs/baseline_e1_main_fp32_retry.jsonl"
+        retry_path = log_dir / "baseline_e1_main_fp32_retry.jsonl"
         if retry_path.exists():
-            retry_meta = json.loads((PROJECT_ROOT / "logs/baseline_e1_fp32_retry_meta.json").read_text())
+            retry_meta = json.loads((log_dir / "baseline_e1_fp32_retry_meta.json").read_text())
             for key in ["model", "dataset_sha256", "prompt_config_sha256", "device", "generation"]:
                 if retry_meta[key] != metadata[key]:
                     print(f"FP32 재추론의 {key} 설정이 달라 그래프를 생성하지 않았습니다.")
@@ -161,7 +168,7 @@ def plot_rate(ax, ns, items, color, marker, label=None):
                     [item["ci95"][1] for _, item in valid], color=color, alpha=0.12)
 
 
-def draw_figure(summary, metadata, stem):
+def draw_figure(summary, metadata, stem, output_dir):
     plt.rcParams.update({"font.family": "DejaVu Serif", "font.size": 10,
                          "axes.titlesize": 11.5, "axes.titleweight": "bold",
                          "axes.labelsize": 10, "pdf.fonttype": 42, "ps.fonttype": 42})
@@ -283,13 +290,19 @@ def draw_figure(summary, metadata, stem):
              "(c,f): same groups complete at every N.\n"
              "Missing results are excluded; unparseable predictions count as incorrect accuracy, "
              "but not as explicit false-Yes/false-No. Pilot development data.", ha="center", va="bottom", fontsize=8.5, linespacing=1.6)
-    fig.savefig(OUTPUT_DIR / f"{stem}.png", dpi=220, bbox_inches="tight", facecolor="white")
-    fig.savefig(OUTPUT_DIR / f"{stem}.pdf", bbox_inches="tight", facecolor="white")
+    fig.savefig(output_dir / f"{stem}.png", dpi=220, bbox_inches="tight", facecolor="white")
+    fig.savefig(output_dir / f"{stem}.pdf", bbox_inches="tight", facecolor="white")
     plt.close(fig)
 
 
 def main():
-    loaded = load_results()
+    model_name, config, _ = parse_model_config("선택한 모델의 E1 결과를 시각화합니다.")
+    log_dir = get_log_dir(model_name, config)
+    output_dir = OUTPUT_DIR / model_name
+    if not (log_dir / "baseline_e1_meta.json").exists():
+        print(f"저장된 추론 결과가 없습니다: {model_name} ({log_dir})")
+        return
+    loaded = load_results(log_dir, config)
     if loaded is None:
         return
     metadata, expected, records, hashes = loaded
@@ -298,6 +311,7 @@ def main():
         return
     summary = summarize(expected, records)
     summary.update({
+        "model_name": model_name, "model": config,
         "include_fp32": INCLUDE_FP32, "source_sha256": hashes,
         "dataset_sha256": metadata["dataset_sha256"], "template_id": "main",
         "seed": SEED, "bootstrap_repeats": BOOTSTRAP_REPEATS,
@@ -309,15 +323,15 @@ def main():
             "sensitivity_cohort": "groups with both answers available at every N",
         },
     })
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
     stem = "e1_main_fp16_fp32" if INCLUDE_FP32 else "e1_main_fp16"
-    (OUTPUT_DIR / f"{stem}_metrics.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2, allow_nan=False)+"\n", encoding="utf-8")
-    draw_figure(summary, metadata, stem)
+    (output_dir / f"{stem}_metrics.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2, allow_nan=False)+"\n", encoding="utf-8")
+    draw_figure(summary, metadata, stem, output_dir)
     print(f"분석 결과: {summary['included_trials']}/{summary['expected_trials']}개 / "
           f"공통 완성 그룹: {len(summary['complete_groups'])}/{summary['expected_groups']}개")
-    print(f"그림: {OUTPUT_DIR / (stem + '.png')}")
-    print(f"PDF: {OUTPUT_DIR / (stem + '.pdf')}")
-    print(f"지표: {OUTPUT_DIR / (stem + '_metrics.json')}")
+    print(f"그림: {output_dir / (stem + '.png')}")
+    print(f"PDF: {output_dir / (stem + '.pdf')}")
+    print(f"지표: {output_dir / (stem + '_metrics.json')}")
 
 
 if __name__ == "__main__":
