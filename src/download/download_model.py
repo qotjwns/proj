@@ -7,7 +7,7 @@ from huggingface_hub import snapshot_download
 
 
 MODEL_DIR = Path(__file__).resolve().parents[2] / "data" / "models"
-DEFAULT_MODEL = "Qwen/Qwen2.5-0.5B-Instruct"
+DEFAULT_MODEL = "Qwen/Qwen2.5-VL-3B-Instruct"
 
 
 def download_model(model_name: str = DEFAULT_MODEL) -> Path:
