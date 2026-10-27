@@ -13,6 +13,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import torch
+from tqdm import tqdm
 
 from src.common.data import normalize_category, read_jsonl as load_cases
 from src.common.images import load_image
@@ -100,7 +101,7 @@ def main() -> None:
     model_path = args.model_path.expanduser().resolve()
     output_path = (
         args.output.expanduser().resolve() if args.output
-        else RESULT_DIR / f"{input_path.stem}_results.jsonl"
+        else RESULT_DIR / f"{model_path.name}_results.jsonl"
     )
     if output_path == input_path:
         raise ValueError("추론 결과를 입력 JSONL에 덮어쓸 수 없습니다.")
@@ -118,8 +119,7 @@ def main() -> None:
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8") as output:
-        for index, case in enumerate(selected, start=1):
-            print(f"[{index}/{len(selected)}] {case['case_id']}", flush=True)
+        for case in tqdm(selected, desc="Inference", unit="sample"):
             result = infer_case(model, processor, case, token_ids, args.max_new_tokens)
             output.write(json.dumps(result, ensure_ascii=False, allow_nan=False) + "\n")
             output.flush()
