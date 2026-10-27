@@ -1,4 +1,3 @@
 /data/*
-!/data/download_data.py
 /.venv/
 __pycache__/

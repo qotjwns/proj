@@ -1,17 +1,18 @@
 # 카테고리별로 bbox 면적이 이미지의 5% 이상인 양성과 대상 객체 주석이 없는
 # 음성 후보를 분류하고, 이미지 ID·경로 목록과 개수 집계를 JSON으로 저장합니다.
 
-import json
 from pathlib import Path
 import sys
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-PROJECT_DIR = Path(__file__).resolve().parents[2]
-DATA_DIR = PROJECT_DIR / "data"
-IMAGE_DIR = DATA_DIR / "coco" / "val2017"
-ANNOTATION_PATH = DATA_DIR / "coco_rem" / "instances_valrem.json"
+from src.common.data import read_json, write_json
+from src.common.paths import ANNOTATION_PATH, DATA_DIR, IMAGE_DIR, POOL_DIR, PROJECT_ROOT
+
+
+PROJECT_DIR = PROJECT_ROOT
 OUTPUT_PATH = DATA_DIR / "pool_counts.json"
-POOL_DIR = DATA_DIR / "pools"
 MIN_BBOX_AREA_RATIO = 0.05
 
 
@@ -117,16 +118,11 @@ def save_pools(data, pools):
             manifest["images"] = [image_records[image_id] for image_id in image_ids]
 
             output_path = category_dir / f"{pool_type}.json"
-            temporary_path = output_path.with_suffix(".json.tmp")
-            with temporary_path.open("w", encoding="utf-8") as output:
-                json.dump(manifest, output, ensure_ascii=False, indent=2)
-                output.write("\n")
-            temporary_path.replace(output_path)
+            write_json(manifest, output_path)
 
 
 def main():
-    with ANNOTATION_PATH.open(encoding="utf-8") as source:
-        data = json.load(source)
+    data = read_json(ANNOTATION_PATH)
     pools = build_pool_ids(data)
     summary = summarize_pools(data, pools)
     save_pools(data, pools)
@@ -145,9 +141,7 @@ def main():
             f"{row['excluded_small_only_count']:>10,}"
         )
 
-    with OUTPUT_PATH.open("w", encoding="utf-8") as output:
-        json.dump(summary, output, ensure_ascii=False, indent=2)
-        output.write("\n")
+    write_json(summary, OUTPUT_PATH)
     print(f"\n집계 저장: {OUTPUT_PATH}")
     print(f"양성·음성 후보 이미지 목록 저장: {POOL_DIR}")
     print("음성 후보는 주석 기준이며, 실제 객체 부재는 사진을 확인해야 합니다.")

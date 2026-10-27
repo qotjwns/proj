@@ -6,9 +6,13 @@ from urllib.request import Request, urlopen
 import zipfile
 import zlib
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from src.common.paths import DATA_DIR
+
 
 CHUNK_SIZE = 1024 * 1024
-DATA_DIR = Path(__file__).resolve().parent / "data"
 DATASETS = {
     "images": {
         "url": "http://images.cocodataset.org/zips/val2017.zip",
@@ -30,8 +34,6 @@ DATASETS = {
 
 def download(url: str, archive_path: Path) -> None:
     if archive_path.exists():
-        if not zipfile.is_zipfile(archive_path):
-            raise ValueError(f"Invalid existing ZIP; move it aside and rerun: {archive_path}")
         print(f"Reusing {archive_path}")
         return
 

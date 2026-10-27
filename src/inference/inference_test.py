@@ -5,16 +5,21 @@
 import argparse
 from pathlib import Path
 
+if __package__ in (None, ""):
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 import torch
-from PIL import Image, ImageOps
-from transformers import AutoConfig, AutoProcessor, Qwen2_5_VLForConditionalGeneration
+from PIL import Image
+from transformers import AutoProcessor, Qwen2_5_VLForConditionalGeneration
+
+from src.common.images import load_image
+from src.common.paths import DEFAULT_MODEL_PATH, IMAGE_DIR
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_MODEL_PATH = PROJECT_ROOT / "data" / "models" / "Qwen" / "Qwen2.5-VL-3B-Instruct"
 DEFAULT_IMAGE_PATHS = [
-    PROJECT_ROOT / "data" / "coco" / "val2017" / "000000124798.jpg",
-    PROJECT_ROOT / "data" / "coco" / "val2017" / "000000377393.jpg",
+    IMAGE_DIR / "000000124798.jpg",
+    IMAGE_DIR / "000000377393.jpg",
 ]
 DEFAULT_PROMPT = "두 이미지의 차이를 설명해줘"
 
@@ -34,19 +39,6 @@ def select_device(device_name: str = "auto") -> torch.device:
 
 def load_model(model_path: str | Path, device: torch.device):
     model_path = Path(model_path).expanduser().resolve()
-    if not model_path.is_dir():
-        raise FileNotFoundError(
-            f"모델 폴더가 없습니다: {model_path}\n"
-            "download_model.py로 Qwen2.5-VL 모델을 다운로드"
-        )
-
-    config = AutoConfig.from_pretrained(model_path, local_files_only=True)
-    if config.model_type != "qwen2_5_vl":
-        raise ValueError(
-            f"Qwen2.5-VL 모델이 필요합니다. 입력 모델의 종류: {config.model_type}. "
-            "Qwen2.5-0.5B-Instruct는 텍스트 전용입니다."
-        )
-
     if device.type == "cpu":
         dtype = torch.float32
     elif device.type == "cuda" and torch.cuda.is_bf16_supported():
@@ -61,20 +53,12 @@ def load_model(model_path: str | Path, device: torch.device):
     )
     model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
         model_path,
-        config=config,
         local_files_only=True,
         dtype=dtype,
         attn_implementation="sdpa",
     )
     model = model.to(device).eval()
     return model, processor
-
-
-def load_image(image_path: str | Path) -> Image.Image:
-    """이미지 한 장을 읽고 회전 정보와 RGB 형식을 정리합니다."""
-    image_path = Path(image_path).expanduser().resolve()
-    with Image.open(image_path) as image:
-        return ImageOps.exif_transpose(image).convert("RGB")
 
 
 def prepare_inputs(processor, images: list[Image.Image], prompt: str):
@@ -105,7 +89,7 @@ def infer_images(
     prompt: str = DEFAULT_PROMPT,
     max_new_tokens: int = 256,
 ) -> str:
-    """두 이미지 정보를 함께 사용해 답변 하나를 생성합니다."""
+    """입력 이미지들의 정보를 함께 사용해 답변 하나를 생성합니다."""
     inputs = prepare_inputs(processor, images, prompt).to(model.device)
     generated_ids = model.generate(
         **inputs,
@@ -121,14 +105,14 @@ def infer_images(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Qwen2.5-VL로 이미지 두 장을 비교")
+    parser = argparse.ArgumentParser(description="Qwen2.5-VL로 한 장 이상의 이미지에 대한 답변 생성")
     parser.add_argument(
         "--image",
         type=Path,
-        nargs=2,
+        nargs="+",
         default=DEFAULT_IMAGE_PATHS,
-        metavar=("IMAGE1", "IMAGE2"),
-        help="비교할 이미지 두 장의 경로 (기본값: %(default)s)",
+        metavar="IMAGE",
+        help="입력 순서대로 이미지 경로 한 개 이상 (기본값: %(default)s)",
     )
     parser.add_argument("--model-path", type=Path, default=DEFAULT_MODEL_PATH,help="다운로드된 Qwen2.5-VL 모델 폴더")
     parser.add_argument("--prompt", default=DEFAULT_PROMPT, help="이미지에 대한 질문")

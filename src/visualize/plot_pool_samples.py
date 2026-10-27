@@ -1,34 +1,30 @@
-# 전체 클래스: python src/data_manipulate/plot_pool_samples.py
-# 특정 클래스: python src/data_manipulate/plot_pool_samples.py --category person
-# 다른 샘플: python src/data_manipulate/plot_pool_samples.py --seed 123
+# 전체 클래스: python src/visualize/plot_pool_samples.py
+# 특정 클래스: python src/visualize/plot_pool_samples.py --category person
+# 다른 샘플: python src/visualize/plot_pool_samples.py --seed 123
 # 저장 위치: data/pool_samples/<클래스 폴더명>.png
 
 import argparse
-import json
 from pathlib import Path
 import random
 import sys
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from PIL import Image, ImageOps
+from PIL import Image
+
+from src.common.data import normalize_category, read_json as load_pool
+from src.common.images import load_image as load_rgb_image
+from src.common.paths import DATA_DIR, POOL_DIR, project_path
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_POOL_DIR = PROJECT_ROOT / "data" / "pools"
-DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "pool_samples"
+DEFAULT_POOL_DIR = POOL_DIR
+DEFAULT_OUTPUT_DIR = DATA_DIR / "pool_samples"
 SAMPLES_PER_POOL = 4
-
-
-def load_pool(pool_path: Path) -> dict:
-    """make_pool.py가 생성한 이미지 목록을 읽습니다."""
-    with pool_path.open(encoding="utf-8") as source:
-        pool = json.load(source)
-    if pool["image_path_base"] != "project_root":
-        raise ValueError(f"프로젝트 기준 이미지 경로가 필요합니다: {pool_path}")
-    return pool
 
 
 def sample_images(pool: dict, seed: int) -> list[dict]:
@@ -40,11 +36,7 @@ def sample_images(pool: dict, seed: int) -> list[dict]:
 
 def load_image(image_path: str) -> Image.Image:
     """JSON의 상대 경로를 프로젝트 기준으로 해석해 이미지를 읽습니다."""
-    path = Path(image_path).expanduser()
-    if not path.is_absolute():
-        path = PROJECT_ROOT / path
-    with Image.open(path) as image:
-        return ImageOps.exif_transpose(image).convert("RGB")
+    return load_rgb_image(project_path(image_path))
 
 
 def plot_category(category_dir: Path, output_dir: Path, seed: int) -> Path:
@@ -97,19 +89,8 @@ def plot_category(category_dir: Path, output_dir: Path, seed: int) -> Path:
                     f"{label} | image ID: {record['image_id']}",
                     fontsize=11, color=color,
                 )
-                try:
-                    with load_image(record["image_path"]) as image:
-                        axis.imshow(image)
-                except OSError as error:
-                    axis.text(
-                        0.5, 0.5, "Image load failed",
-                        ha="center", va="center", transform=axis.transAxes,
-                        color="firebrick",
-                    )
-                    print(
-                        f"[이미지 오류] {record['image_path']}: {error}",
-                        file=sys.stderr,
-                    )
+                with load_image(record["image_path"]) as image:
+                    axis.imshow(image)
 
         fig.text(
             0.5, 0.02,
@@ -146,12 +127,9 @@ def main() -> None:
 
     pool_dir = args.pool_dir.expanduser().resolve()
     output_dir = args.output_dir.expanduser().resolve()
-    if not pool_dir.is_dir():
-        parser.error(f"pool 폴더가 없습니다: {pool_dir}")
-
     category_dirs = sorted(path.parent for path in pool_dir.glob("*/positive.json"))
     if args.category:
-        category_key = args.category.strip().casefold().replace(" ", "_")
+        category_key = normalize_category(args.category).replace(" ", "_")
         category_dirs = [
             path for path in category_dirs
             if category_key in {

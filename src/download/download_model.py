@@ -3,11 +3,13 @@
 import argparse
 from pathlib import Path
 
+if __package__ in (None, ""):
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from huggingface_hub import snapshot_download
 
-
-MODEL_DIR = Path(__file__).resolve().parents[2] / "data" / "models"
-DEFAULT_MODEL = "Qwen/Qwen2.5-VL-3B-Instruct"
+from src.common.paths import DEFAULT_MODEL, MODEL_DIR
 
 
 def download_model(model_name: str = DEFAULT_MODEL) -> Path:
