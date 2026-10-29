@@ -50,10 +50,11 @@ def yes_no_token_ids(tokenizer) -> tuple[int, int]:
 @torch.inference_mode()
 def infer_case(
     model, processor, case: dict, token_ids: tuple[int, int], max_new_tokens: int,
+    *, image_dir: Path = IMAGE_DIR,
 ) -> dict:
     """한 번의 생성에서 답변 원문과 첫 출력 위치의 원시 Yes/No logits를 얻습니다."""
     with ExitStack() as stack:
-        images = [stack.enter_context(load_image(IMAGE_DIR / name)) for name in case["image_order"]]
+        images = [stack.enter_context(load_image(image_dir / name)) for name in case["image_order"]]
         inputs = prepare_inputs(processor, images, case["prompt"]).to(model.device)
         generated = model.generate(
             **inputs,
