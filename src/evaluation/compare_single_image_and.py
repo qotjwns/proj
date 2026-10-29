@@ -166,10 +166,16 @@ def save_case_csv(comparisons: list[dict], output_path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="단일 이미지 예측 AND와 기존 3장 입력 결과의 PNG·CSV 비교")
-    parser.add_argument("--input-jsonl", type=Path, help="생략하면 data/single_image_results/*_single_image_results.jsonl 전체")
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument("--model-path", type=Path, help="선택 모델의 단일 이미지 결과만 비교")
+    source.add_argument("--input-jsonl", type=Path, help="생략하면 data/single_image_results/*_single_image_results.jsonl 전체")
     parser.add_argument("--output-dir", type=Path, default=EVALUATION_RESULT_DIR)
     args = parser.parse_args()
-    inputs = [args.input_jsonl.expanduser().resolve()] if args.input_jsonl else sorted(SINGLE_IMAGE_RESULT_DIR.glob("*_single_image_results.jsonl"))
+    if args.input_jsonl:
+        inputs = [args.input_jsonl.expanduser().resolve()]
+    else:
+        prefix = args.model_path.expanduser().resolve().name + "_" if args.model_path else ""
+        inputs = sorted(SINGLE_IMAGE_RESULT_DIR.glob(f"{prefix}*_single_image_results.jsonl"))
     if not inputs:
         parser.error("단일 이미지 추론 결과가 없습니다.")
     output_dir = args.output_dir.expanduser().resolve()

@@ -42,11 +42,15 @@ python src/data_manipulate/make_inference_pool.py
 
 첫 명령은 클래스별 양성·음성 후보를 만들고, 두 번째는 기본 20개 클래스에서 100개 그룹을 생성합니다.
 
-### 5. 평가 입력이 준비되어 있으면 추론 실행
+### 5. 평가 입력 생성 및 추론
 
-저장소에 `src/inference/build_cases.py`가 없어 pool에서 평가 JSONL을 새로 만드는 단계는 현재 제공되지 않습니다. 기존 JSONL이 `data/inference_cases/inference_groups_seed42_balanced3_seed42_cases.jsonl`에 있을 때만 다음 명령을 실행할 수 있습니다.
+`build_cases.py`가 그룹 JSON에서 3장짜리 Yes 400개·No 400개를 만듭니다. 기존 `data/inference_cases/inference_groups_seed42_balanced3_seed42_cases.jsonl`이 있으면 생성 단계는 건너뛰고 그대로 추론에 사용합니다.
 
 ```bash
+# cases JSONL이 없을 때만 생성
+python src/inference/build_cases.py
+
+# 준비된 cases JSONL로 추론
 python src/inference/run_inference.py --limit 8 --output data/inference_results/pilot_results.jsonl
 python src/inference/run_inference.py
 ```
@@ -100,16 +104,32 @@ python src/data_manipulate/make_inference_pool.py
 
 첫 명령은 클래스별 양성·음성 후보를 만들고, 두 번째는 기본 20개 클래스에서 100개 그룹을 생성합니다.
 
-### 5. 평가 입력이 준비되어 있으면 추론 실행
+### 5. 평가 입력 생성 및 추론
 
-저장소에 `src/inference/build_cases.py`가 없어 pool에서 평가 JSONL을 새로 만드는 단계는 현재 제공되지 않습니다. 기존 JSONL이 `data\inference_cases\inference_groups_seed42_balanced3_seed42_cases.jsonl`에 있을 때만 다음 명령을 실행할 수 있습니다.
+`build_cases.py`가 그룹 JSON에서 3장짜리 Yes 400개·No 400개를 만듭니다. 기존 `data\inference_cases\inference_groups_seed42_balanced3_seed42_cases.jsonl`이 있으면 생성 단계는 건너뛰고 그대로 추론에 사용합니다.
 
 ```powershell
+# cases JSONL이 없을 때만 생성
+python src/inference/build_cases.py
+
+# 준비된 cases JSONL로 추론
 python src/inference/run_inference.py --limit 8 --output data/inference_results/pilot_results.jsonl
 python src/inference/run_inference.py
 ```
 
 모델을 바꾸려면 `--model-path`에 로컬 비전 모델 폴더를 지정합니다. 예를 들어 Qwen2.5-VL-7B-Instruct는 `Qwen/Qwen2.5-VL-7B-Instruct`입니다. `Qwen2.5-7B-Instruct`처럼 `VL`이 없는 텍스트 전용 모델은 이 이미지 추론 코드에서 사용할 수 없습니다. 7B 모델은 GPU 메모리 부족으로 실행에 실패할 수 있습니다.
+
+## 평가 입력 생성 코드
+
+`src/inference/build_cases.py` 한 파일에서 현재 사용하는 `balanced3`만 생성합니다. argparse 없이 상단의 `SEED`, `GROUPS_JSON`, `OUTPUT_JSONL`로 설정합니다.
+
+- 입력: `data/inference_pools/inference_groups_seed42.json`의 100개 그룹
+- 출력: `data/inference_cases/inference_groups_seed42_balanced3_seed42_cases.jsonl`
+- 그룹당 PPP 4개와 No 4개. 전체 D(PPP) 400개, A(NNN) 134개, B(PNN) 133개, C(PPN) 133개입니다.
+- No는 A/B/C 하나씩에 그룹 순서대로 A→B→C 하나를 추가합니다. P를 앞에, N을 뒤에 두며 같은 클래스의 이미지 3장 조합은 중복을 제외합니다.
+- 질문은 `Is there a {object} in all 3 images? Please answer with Yes or No.`입니다. 기존 JSONL의 필드와 `case_id` 해시 규칙을 유지하고, `negative_positions`는 0부터 시작합니다.
+
+사라진 원본 대신 생성 규칙에 맞춰 재작성한 코드이므로, 시드가 42여도 이전 파일의 음성 조합을 그대로 재현한다고 보장하지 않습니다. 진행 중인 A/B/C 비교에는 기존 800개 JSONL을 계속 사용합니다. 새 조합이 필요하면 `OUTPUT_JSONL`을 다른 파일명으로 바꿉니다. 파일이 이미 존재하면 덮어쓰지 않고 `FileExistsError`로 중단합니다. 이미지 복사나 모델 실행은 하지 않습니다.
 
 ## 기본 성능 평가 (macOS / Windows 공통)
 

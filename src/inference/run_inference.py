@@ -1,7 +1,7 @@
 # 전체 추론: python src/inference/run_inference.py
 # 한 그룹: python src/inference/run_inference.py --group group_01_cat
 # 소규모 확인: python src/inference/run_inference.py --limit 8
-# 저장 형식: 샘플마다 case_id, image_order, model_answer, answer, yes_logit, no_logit
+# 저장 형식: 샘플마다 case_id, image_order, model_answer, gt, yes_logit, no_logit
 
 import argparse
 from contextlib import ExitStack
@@ -89,7 +89,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="로컬 Qwen 모델로 3장 입력을 추론하고 답변·Yes/No logits 저장")
     parser.add_argument("--input-jsonl", type=Path, default=DEFAULT_CASES_JSONL)
     parser.add_argument("--model-path", type=Path, default=DEFAULT_MODEL_PATH, help="로컬 Qwen2.5-VL 모델 폴더")
-    parser.add_argument("--output", type=Path, help="결과 JSONL 경로 (기본: data/inference_results/<입력 파일명>_results.jsonl)")
+    parser.add_argument("--output", type=Path, help="결과 JSONL 경로 (기본: data/inference_results/<모델명>_results.jsonl)")
     parser.add_argument("--group", help="그룹 하나만 추론 (예: group_01_cat)")
     parser.add_argument("--category", help="해당 클래스만 추론 (예: cat)")
     parser.add_argument("--condition", choices=("A", "B", "C", "D"))

@@ -1,4 +1,4 @@
-# python src/download/download_model.py --model-name Qwen/Qwen2.5-3B-Instruct
+# python src/download/download_model.py --model-name Qwen/Qwen2.5-VL-3B-Instruct
 
 import argparse
 from pathlib import Path

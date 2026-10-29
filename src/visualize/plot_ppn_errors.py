@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 
 from src.common.data import read_jsonl
 from src.common.images import load_image
-from src.common.paths import DEFAULT_CASES_JSONL, EVALUATION_RESULT_DIR, RESULT_DIR, project_path
+from src.common.paths import DEFAULT_CASES_JSONL, DEFAULT_MODEL_PATH, EVALUATION_RESULT_DIR, RESULT_DIR, project_path
 from src.evaluation.evaluate_composition import evaluate_composition, index_cases
 from src.evaluation.evaluate_results import normalize_answer
 
@@ -97,14 +97,14 @@ def plot_cases(records: list[dict], model_name: str, output_path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="2P+1N에서 Yes로 잘못 답한 사례의 원본 이미지 플롯")
-    parser.add_argument(
-        "--input-jsonl", type=Path,
-        default=RESULT_DIR / "Qwen2.5-VL-3B-Instruct_results.jsonl",
-    )
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument("--model-path", type=Path, default=DEFAULT_MODEL_PATH, help="선택 모델의 결과 사용 (기본: 3B)")
+    source.add_argument("--input-jsonl", type=Path, help="모델 경로 대신 결과 파일을 직접 지정")
     parser.add_argument("--cases-jsonl", type=Path, default=DEFAULT_CASES_JSONL)
     parser.add_argument("--output-dir", type=Path, help="모음 및 개별 PNG 저장 폴더")
     args = parser.parse_args()
-    input_path = args.input_jsonl.expanduser().resolve()
+    model_name = args.model_path.expanduser().resolve().name
+    input_path = args.input_jsonl.expanduser().resolve() if args.input_jsonl else RESULT_DIR / f"{model_name}_results.jsonl"
     try:
         cases_by_id = index_cases(read_jsonl(args.cases_jsonl.expanduser().resolve()))
         selected = select_errors(read_jsonl(input_path), cases_by_id)

@@ -80,7 +80,9 @@ def print_metrics(input_path: Path, metrics: dict, output_path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="추론 결과의 기본 Yes/No 성능 평가 및 PNG 저장")
-    parser.add_argument(
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument("--model-path", type=Path, help="선택 모델의 결과만 평가 (생략하면 전체 모델)")
+    source.add_argument(
         "--input-jsonl", type=Path,
         help="평가할 결과 파일 (생략하면 data/inference_results/*_results.jsonl 전체)",
     )
@@ -90,10 +92,13 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    input_paths = (
-        [args.input_jsonl.expanduser().resolve()]
-        if args.input_jsonl else sorted(RESULT_DIR.glob("*_results.jsonl"))
-    )
+    if args.input_jsonl:
+        input_paths = [args.input_jsonl.expanduser().resolve()]
+    elif args.model_path:
+        model_name = args.model_path.expanduser().resolve().name
+        input_paths = [RESULT_DIR / f"{model_name}_results.jsonl"]
+    else:
+        input_paths = sorted(RESULT_DIR.glob("*_results.jsonl"))
     if not input_paths:
         parser.error(f"평가할 *_results.jsonl 파일이 없습니다: {RESULT_DIR}")
     output_dir = args.output_dir.expanduser().resolve()
