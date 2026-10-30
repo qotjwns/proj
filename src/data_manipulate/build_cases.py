@@ -1,3 +1,4 @@
+# 실행: python src/data_manipulate/build_cases.py
 """그룹 JSON → 이미지 3장짜리 Yes 400개 / No 400개. 모델·이미지는 로드하지 않습니다."""
 
 from collections import Counter

@@ -1,4 +1,4 @@
-"""프로젝트의 데이터·모델 경로를 한곳에서 정의합니다."""
+# 공통 경로 모듈. 사용: python src/experiments/a/run.py --model-path data/models/Qwen/Qwen2.5-VL-3B-Instruct
 
 from pathlib import Path
 
@@ -13,13 +13,19 @@ DEFAULT_MODEL_PATH = MODEL_DIR / DEFAULT_MODEL
 POOL_DIR = DATA_DIR / "pools"
 INFERENCE_POOL_DIR = DATA_DIR / "inference_pools"
 CASE_DIR = DATA_DIR / "inference_cases"
-RESULT_DIR = DATA_DIR / "inference_results"
-SINGLE_IMAGE_RESULT_DIR = DATA_DIR / "single_image_results"
-SINGLE_IMAGE_AND_DIR = DATA_DIR / "single_image_and"
-EVALUATION_RESULT_DIR = DATA_DIR / "evaluation_results"
+EXPERIMENT_DIR = DATA_DIR / "experiments"
+ABC_COMPARISON_DIR = EXPERIMENT_DIR / "comparison"
 GROUP_PLOT_DIR = DATA_DIR / "inference_group_plots"
 DEFAULT_GROUPS_JSON = INFERENCE_POOL_DIR / "inference_groups_seed42.json"
 DEFAULT_CASES_JSONL = CASE_DIR / "inference_groups_seed42_balanced3_seed42_cases.jsonl"
+
+
+def result_path(experiment: str, model_path: Path, run: str = "full") -> Path:
+    return EXPERIMENT_DIR / experiment / "results" / model_path.name / run / "results.jsonl"
+
+
+def report_dir(experiment: str, model_path: Path, run: str = "full") -> Path:
+    return EXPERIMENT_DIR / experiment / "evaluation" / model_path.name / run
 
 
 def project_path(path: str | Path) -> Path:

@@ -1,4 +1,4 @@
-"""JSON 입출력과 클래스·그룹 필터."""
+# JSON 입출력·필터 공통 모듈. 사용: python src/data_manipulate/make_pool.py
 
 import json
 from pathlib import Path
@@ -21,16 +21,6 @@ def write_json(data, output_path: Path) -> None:
     with temporary_path.open("w", encoding="utf-8") as output:
         json.dump(data, output, ensure_ascii=False, indent=2)
         output.write("\n")
-    temporary_path.replace(output_path)
-
-
-def write_jsonl(records: list[dict], output_path: Path) -> None:
-    """기존 평가 입력과 같은 형식으로 레코드 하나를 한 줄에 저장합니다."""
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    temporary_path = output_path.with_suffix(output_path.suffix + ".tmp")
-    with temporary_path.open("w", encoding="utf-8") as output:
-        for record in records:
-            output.write(json.dumps(record, ensure_ascii=False) + "\n")
     temporary_path.replace(output_path)
 
 

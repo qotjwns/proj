@@ -1,5 +1,5 @@
-# 보조 도구: 양성 4장·음성 후보 8장을 확인합니다. 3장 실험 plot은 plot_inference_cases.py를 사용합니다.
 # 전체 그룹: python src/visualize/plot_inference_groups.py
+# 양성 4장·음성 후보 8장 확인용. 3장 실험 plot은 plot_inference_cases.py를 사용합니다.
 # 그룹 하나: python src/visualize/plot_inference_groups.py --group group_01_person
 # 특정 클래스: python src/visualize/plot_inference_groups.py --category cat
 # 다른 JSON: python src/visualize/plot_inference_groups.py --input-json data/inference_pools/inference_groups_seed123.json
@@ -16,7 +16,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from src.common.data import load_groups, select_groups
+from src.common.data import read_json as load_groups, select_groups
 from src.common.images import load_image
 from src.common.paths import DATA_DIR, DEFAULT_GROUPS_JSON, IMAGE_DIR
 

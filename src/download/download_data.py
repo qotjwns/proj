@@ -1,3 +1,5 @@
+# 실행: python src/download/download_data.py
+
 from pathlib import Path
 import shutil
 import sys
@@ -130,5 +132,5 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    print(DATA_DIR)
-    # sys.exit(main())
+    # print(DATA_DIR)
+    sys.exit(main())

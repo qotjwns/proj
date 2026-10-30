@@ -1,4 +1,4 @@
-"""Pillow 이미지 로딩. 데이터 생성 코드는 이 모듈에 의존하지 않습니다."""
+# 이미지 로딩 공통 모듈. 사용: python src/visualize/plot_inference_cases.py
 
 from pathlib import Path
 

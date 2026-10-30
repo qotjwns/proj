@@ -1,3 +1,4 @@
+# 실행: python src/data_manipulate/make_pool.py
 # 카테고리별로 bbox 면적이 이미지의 5% 이상인 양성과 대상 객체 주석이 없는
 # 음성 후보를 분류하고, 이미지 ID·경로 목록과 개수 집계를 JSON으로 저장합니다.
 

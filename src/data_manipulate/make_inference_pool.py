@@ -46,16 +46,12 @@ def find_category_dir(pool_dir: Path, category: str) -> Path:
     return matches[0]
 
 
-def load_candidates(path: Path, expected_type: str) -> dict:
-    """후보 목록을 읽고 양음성 종류와 이미지 중복을 확인합니다."""
+def load_candidates(path: Path) -> dict:
+    """샘플링 전에 같은 이미지가 중복 등록되지 않았는지만 확인합니다."""
     pool = read_json(path)
-    if pool["pool_type"] != expected_type:
-        raise ValueError(f"pool 종류가 {expected_type}이어야 합니다: {path}")
     images = pool["images"]
     if len({image["image_id"] for image in images}) != len(images):
         raise ValueError(f"중복된 이미지 ID가 있습니다: {path}")
-    if len({image["image_path"] for image in images}) != len(images):
-        raise ValueError(f"중복된 이미지 경로가 있습니다: {path}")
     return pool
 
 
@@ -74,10 +70,8 @@ def select_category_dirs(
     available = []
     for positive_path in sorted(pool_dir.glob("*/positive.json")):
         category_dir = positive_path.parent
-        positive = load_candidates(positive_path, "positive")
-        negative = load_candidates(
-            category_dir / "negative_candidates.json", "negative_candidates"
-        )
+        positive = load_candidates(positive_path)
+        negative = load_candidates(category_dir / "negative_candidates.json")
         positive_count = len(positive["images"])
         negative_count = len(negative["images"])
         if min(positive_count, negative_count) < IMAGES_PER_LABEL:
@@ -98,74 +92,40 @@ def select_category_dirs(
     return [item[2] for item in available[:num_classes]]
 
 
-def sample_images(pool: dict, seed: int, prefix: str, label: int) -> list[dict]:
-    """중복 없이 8장을 뽑고 P1~P8 또는 N1~N8 이름을 붙입니다."""
+def sample_images(pool: dict, seed: int) -> list[str]:
+    """기존 시드 규칙으로 8장을 뽑아 파일명만 반환합니다."""
     rng = random.Random(f"{seed}:{pool['category_id']}:{pool['pool_type']}")
     candidates = sorted(pool["images"], key=lambda image: image["image_id"])
     selected = rng.sample(candidates, k=IMAGES_PER_LABEL)
-    records = []
-    for index, image in enumerate(selected, start=1):
+    names = []
+    for image in selected:
         image_path = project_path(image["image_path"])
         if image_path.parent.resolve() != IMAGE_DIR.resolve():
             raise ValueError(
                 f"파일명으로 참조할 이미지는 {IMAGE_DIR} 아래에 있어야 합니다: {image_path}"
             )
-        records.append({
-            "sample_id": f"{prefix}{index}",
-            "image_id": image["image_id"],
-            "image_path": image["image_path"],
-            "label": label,
-        })
-    return records
+        names.append(image_path.name)
+    return names
 
 
-def build_inference_pool(category_dir: Path, seed: int) -> dict:
-    """한 클래스의 양성 8장·음성 후보 8장을 추론용 묶음으로 만듭니다."""
-    positive = load_candidates(category_dir / "positive.json", "positive")
-    negative = load_candidates(
-        category_dir / "negative_candidates.json", "negative_candidates"
-    )
-    for key in ("category_id", "category_name", "annotation_source"):
-        if positive[key] != negative[key]:
-            raise ValueError(f"양성·음성 후보의 {key}가 다릅니다: {category_dir}")
-    for key in ("image_id", "image_path"):
-        positive_values = {image[key] for image in positive["images"]}
-        negative_values = {image[key] for image in negative["images"]}
-        if positive_values & negative_values:
-            raise ValueError(f"양성·음성 후보에 겹치는 {key}가 있습니다: {category_dir}")
-
-    positive_images = sample_images(positive, seed, prefix="P", label=1)
-    negative_images = sample_images(negative, seed, prefix="N", label=0)
-    return {
-        "pool_id": f"{category_dir.name}_seed{seed}",
-        "category_id": positive["category_id"],
-        "category_name": positive["category_name"],
-        "seed": seed,
-        "annotation_source": positive["annotation_source"],
-        "image_path_base": "project_root",
-        "image_count": len(positive_images) + len(negative_images),
-        "positive_count": len(positive_images),
-        "negative_candidate_count": len(negative_images),
-        "positive_selection_rule": positive["selection_rule"],
-        "min_bbox_area_ratio": positive["min_bbox_area_ratio"],
-        "negative_selection_rule": negative["selection_rule"],
-        "negative_manual_review_completed": negative.get("manual_review_completed", False),
-        "label_definition": {"1": "target_present", "0": "no_annotation_for_target"},
-        "positive": positive_images,
-        "negative_candidates": negative_images,
-    }
-
-
-def build_groups(pool: dict) -> dict:
+def build_groups(category_dir: Path, seed: int) -> dict:
     """클래스의 양성 8장을 4장씩 묶고 같은 음성 8장을 공유하는 5그룹을 만듭니다."""
-    positive_names = [Path(image["image_path"]).name for image in pool["positive"]]
-    negative_names = [Path(image["image_path"]).name for image in pool["negative_candidates"]]
+    positive = load_candidates(category_dir / "positive.json")
+    negative = load_candidates(category_dir / "negative_candidates.json")
+    if positive["category_id"] != negative["category_id"]:
+        raise ValueError(f"양성·음성 후보의 클래스가 다릅니다: {category_dir}")
+    positive_ids = {image["image_id"] for image in positive["images"]}
+    negative_ids = {image["image_id"] for image in negative["images"]}
+    if positive_ids & negative_ids:
+        raise ValueError(f"양성·음성 후보에 같은 이미지가 있습니다: {category_dir}")
 
-    category_name = pool["category_name"].replace(" ", "_")
+    positive_names = sample_images(positive, seed)
+    negative_names = sample_images(negative, seed)
+    category_name = positive["category_name"].replace(" ", "_")
     groups = {}
     for group_index, indices in enumerate(POSITIVE_GROUPS, start=1):
         groups[f"group_{group_index:02d}_{category_name}"] = {
-            "class": pool["category_name"],
+            "class": positive["category_name"],
             "pos_image": [positive_names[index] for index in indices],
             "neg_image": negative_names.copy(),
         }
@@ -201,13 +161,10 @@ def main() -> None:
     )
     groups = {}
     for category_dir in category_dirs:
-        pool = build_inference_pool(category_dir, args.seed)
-        category_groups = build_groups(pool)
-        if groups.keys() & category_groups.keys():
-            raise ValueError(f"중복된 그룹 이름이 있습니다: {pool['category_name']}")
+        category_groups = build_groups(category_dir, args.seed)
         groups.update(category_groups)
         print(
-            f"[구성] {pool['category_name']}: "
+            f"[구성] {category_dir.name}: "
             f"양성 8장·음성 후보 8장 → {len(category_groups)}그룹",
             flush=True,
         )

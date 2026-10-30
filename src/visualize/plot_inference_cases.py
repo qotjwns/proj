@@ -5,7 +5,6 @@
 # 저장 위치: data/inference_group_plots/<그룹명>.png
 
 import argparse
-import json
 from pathlib import Path
 import textwrap
 
@@ -17,41 +16,13 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from src.common.data import normalize_category
+from src.common.data import normalize_category, read_jsonl
 from src.common.images import load_image
 from src.common.paths import DEFAULT_CASES_JSONL, GROUP_PLOT_DIR, project_path
 
 
 DEFAULT_INPUT_JSONL = DEFAULT_CASES_JSONL
 DEFAULT_OUTPUT_DIR = GROUP_PLOT_DIR
-
-
-def load_cases(jsonl_path: Path) -> list[dict]:
-    """balanced3 JSONL을 읽어 저장된 순서대로 3장짜리 샘플을 반환합니다."""
-    cases = []
-    seen = set()
-    with jsonl_path.open(encoding="utf-8") as source:
-        for line_number, line in enumerate(source, start=1):
-            if not line.strip():
-                continue
-            case = json.loads(line)
-            case_id = case["case_id"]
-            if not case_id or Path(case_id).name != case_id or case_id in {".", ".."}:
-                raise ValueError(f"{line_number}번째 줄: case_id에 경로를 사용할 수 없습니다.")
-            group_id = case["group_id"]
-            if not group_id or Path(group_id).name != group_id or group_id in {".", ".."}:
-                raise ValueError(f"{line_number}번째 줄: group_id에 경로를 사용할 수 없습니다.")
-            if case_id in seen:
-                raise ValueError(f"중복된 case_id입니다: {case_id}")
-            if case["experiment_type"] != "balanced3":
-                raise ValueError(f"balanced3 JSONL을 지정하세요: {case_id}")
-            if len(case["image_order"]) != 3 or len(case["image_labels"]) != 3:
-                raise ValueError(f"이미지와 라벨은 각각 3개여야 합니다: {case_id}")
-            if any(label not in {"P", "N"} for label in case["image_labels"]):
-                raise ValueError(f"이미지 라벨은 P 또는 N이어야 합니다: {case_id}")
-            seen.add(case_id)
-            cases.append(case)
-    return cases
 
 
 def select_cases(
@@ -72,8 +43,6 @@ def select_cases(
         selected = [case for case in selected if case["condition_code"] == condition]
     if gt:
         selected = [case for case in selected if case["gt"] == gt]
-    if not selected:
-        raise ValueError("조건에 맞는 샘플이 없습니다.")
     return selected
 
 
@@ -81,10 +50,7 @@ def group_cases(cases: list[dict]) -> dict[str, list[dict]]:
     """JSONL 순서대로 같은 그룹의 샘플을 모읍니다."""
     groups = {}
     for case in cases:
-        group = groups.setdefault(case["group_id"], [])
-        if group and any(case[key] != group[0][key] for key in ("class", "prompt")):
-            raise ValueError(f"같은 그룹 안에서 클래스 또는 질문이 다릅니다: {case['group_id']}")
-        group.append(case)
+        groups.setdefault(case["group_id"], []).append(case)
     return groups
 
 
@@ -105,11 +71,7 @@ def plot_group(
             y=1 - 0.15 / figure_height,
         )
         for row_index, case in enumerate(cases):
-            case_image_dir = image_dir
-            if case_image_dir is None:
-                if case["image_path_base"] != "project_root":
-                    raise ValueError(f"지원하지 않는 이미지 경로 기준입니다: {case['image_path_base']}")
-                case_image_dir = project_path(case["image_dir"])
+            case_image_dir = image_dir or project_path(case["image_dir"])
             row_title = (
                 f"Sample {row_index + 1} | {case['condition_code']} ({case['composition']})"
                 f" | GT: {case['gt']}"
@@ -158,7 +120,7 @@ def main() -> None:
     image_dir = args.image_dir.expanduser().resolve() if args.image_dir else None
     output_dir = args.output_dir.expanduser().resolve()
     selected = select_cases(
-        load_cases(input_path), group_id=args.group, category=args.category,
+        read_jsonl(input_path), group_id=args.group, category=args.category,
         condition=args.condition, gt=args.gt,
     )
     groups = list(group_cases(selected).items())
